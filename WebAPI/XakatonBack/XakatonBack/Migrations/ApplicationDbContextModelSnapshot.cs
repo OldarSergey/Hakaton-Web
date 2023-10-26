@@ -22,21 +22,6 @@ namespace XakatonBack.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ProjectUser", b =>
-                {
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjectsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ProjectUser");
-                });
-
             modelBuilder.Entity("XakatonBack.Model.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -246,9 +231,6 @@ namespace XakatonBack.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TaskTypeId")
                         .HasColumnType("int");
 
@@ -261,8 +243,6 @@ namespace XakatonBack.Migrations
                     b.HasIndex("PriorityId");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("StatusId");
 
                     b.HasIndex("TaskTypeId");
 
@@ -327,6 +307,9 @@ namespace XakatonBack.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -339,6 +322,8 @@ namespace XakatonBack.Migrations
                         .HasName("FK_Users_Id");
 
                     b.HasIndex("ChatId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("RoleId");
 
@@ -382,21 +367,6 @@ namespace XakatonBack.Migrations
                         .HasName("FK_Weight_Id");
 
                     b.ToTable("Weights");
-                });
-
-            modelBuilder.Entity("ProjectUser", b =>
-                {
-                    b.HasOne("XakatonBack.Model.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("XakatonBack.Model.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("XakatonBack.Model.Project", b =>
@@ -454,13 +424,6 @@ namespace XakatonBack.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Tasks_ProjectId_Projects_Id");
 
-                    b.HasOne("XakatonBack.Model.Status", "Status")
-                        .WithMany("Tasks")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_Tasks_StatusId_Status_Id");
-
                     b.HasOne("XakatonBack.Model.TaskType", "TaskType")
                         .WithMany("Tasks")
                         .HasForeignKey("TaskTypeId")
@@ -479,8 +442,6 @@ namespace XakatonBack.Migrations
 
                     b.Navigation("Project");
 
-                    b.Navigation("Status");
-
                     b.Navigation("TaskType");
 
                     b.Navigation("Weight");
@@ -492,12 +453,21 @@ namespace XakatonBack.Migrations
                         .WithMany("Users")
                         .HasForeignKey("ChatId");
 
+                    b.HasOne("XakatonBack.Model.Project", "Project")
+                        .WithMany("Users")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Users_ProjectId_Projects_Id");
+
                     b.HasOne("XakatonBack.Model.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Users_RoleId_Roles_Id");
+
+                    b.Navigation("Project");
 
                     b.Navigation("Role");
                 });
@@ -546,6 +516,8 @@ namespace XakatonBack.Migrations
             modelBuilder.Entity("XakatonBack.Model.Project", b =>
                 {
                     b.Navigation("Tasks");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("XakatonBack.Model.Role", b =>
@@ -556,8 +528,6 @@ namespace XakatonBack.Migrations
             modelBuilder.Entity("XakatonBack.Model.Status", b =>
                 {
                     b.Navigation("Projects");
-
-                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("XakatonBack.Model.Task", b =>

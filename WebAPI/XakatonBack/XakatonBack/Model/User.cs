@@ -13,12 +13,14 @@
 
         public string Phone { get; set; }
 
+        public int ProjectId { get; set; }
+
 
         public int RoleId { get; set; }
 
 
         public Role Role { get; set; }
-        public ICollection<Project> Projects { get; set; }
+        public Project Project { get; set; }
         public ICollection<UserTask> UserTask { get; set; }
     }
 }

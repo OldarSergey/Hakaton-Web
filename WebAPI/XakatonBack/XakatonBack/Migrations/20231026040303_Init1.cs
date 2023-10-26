@@ -113,36 +113,6 @@ namespace XakatonBack.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    ChatId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("FK_Users_Id", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Chats_ChatId",
-                        column: x => x.ChatId,
-                        principalTable: "Chats",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Users_RoleId_Roles_Id",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -194,8 +164,8 @@ namespace XakatonBack.Migrations
                     DeadLine = table.Column<DateTime>(type: "datetime", nullable: false),
                     TaskTypeId = table.Column<int>(type: "int", nullable: false),
                     PriorityId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false),
-                    WeightId = table.Column<int>(type: "int", nullable: false)
+                    WeightId = table.Column<int>(type: "int", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -206,9 +176,9 @@ namespace XakatonBack.Migrations
                         principalTable: "Priorities",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Tasks_StatusId_Status_Id",
-                        column: x => x.StatusId,
-                        principalTable: "Statuses",
+                        name: "FK_Tasks_ProjectId_Projects_Id",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tasks_TaskTypeId_TaskType_Id",
@@ -223,25 +193,38 @@ namespace XakatonBack.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectUser",
+                name: "Users",
                 columns: table => new
                 {
-                    ProjectsId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectUser", x => new { x.ProjectsId, x.UsersId });
+                    table.PrimaryKey("FK_Users_Id", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectUser_Projects_ProjectsId",
-                        column: x => x.ProjectsId,
+                        name: "FK_Users_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Users_ProjectId_Projects_Id",
+                        column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectUser_Users_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "Users",
+                        name: "FK_Users_RoleId_Roles_Id",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -293,19 +276,14 @@ namespace XakatonBack.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectUser_UsersId",
-                table: "ProjectUser",
-                column: "UsersId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tasks_PriorityId",
                 table: "Tasks",
                 column: "PriorityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_StatusId",
+                name: "IX_Tasks_ProjectId",
                 table: "Tasks",
-                column: "StatusId");
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_TaskTypeId",
@@ -323,6 +301,11 @@ namespace XakatonBack.Migrations
                 column: "ChatId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_ProjectId",
+                table: "Users",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
@@ -336,13 +319,7 @@ namespace XakatonBack.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ProjectUser");
-
-            migrationBuilder.DropTable(
                 name: "UserTasks");
-
-            migrationBuilder.DropTable(
-                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "Tasks");
@@ -351,25 +328,28 @@ namespace XakatonBack.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Priorities");
-
-            migrationBuilder.DropTable(
-                name: "Statuses");
-
-            migrationBuilder.DropTable(
                 name: "TaskTypes");
 
             migrationBuilder.DropTable(
                 name: "Weights");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Chats");
+
+            migrationBuilder.DropTable(
+                name: "Priorities");
+
+            migrationBuilder.DropTable(
+                name: "Statuses");
         }
     }
 }

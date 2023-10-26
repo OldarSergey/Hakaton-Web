@@ -1,4 +1,6 @@
-﻿namespace XakatonBack.Model
+﻿using System.Text.Json.Serialization;
+
+namespace XakatonBack.Model
 {
     public class Project
     {
@@ -20,7 +22,10 @@
         public Priority Priority { get; set; }
         public Chat Chat { get; set; }
 
+       
         public ICollection<User> Users { get; set; }
+
+    
         public ICollection<Task> Tasks { get; set; }
     }
 }

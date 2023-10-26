@@ -36,11 +36,11 @@ namespace XakatonBack.Configuration
                 .HasConstraintName("FK_Tasks_PriorityId_Priority_Id")
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(t => t.Status)
-                .WithMany(tt => tt.Tasks)
-                .HasForeignKey(t => t.StatusId)
-                .HasConstraintName("FK_Tasks_StatusId_Status_Id")
-                .OnDelete(DeleteBehavior.NoAction);
+            //builder.HasOne(t => t.Status)
+            //    .WithMany(tt => tt.Tasks)
+            //    .HasForeignKey(t => t.StatusId)
+            //    .HasConstraintName("FK_Tasks_StatusId_Status_Id")
+            //    .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(t => t.Weight)
                 .WithMany(tt => tt.Tasks)

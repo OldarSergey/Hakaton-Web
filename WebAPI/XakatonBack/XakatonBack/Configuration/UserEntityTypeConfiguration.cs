@@ -36,6 +36,11 @@ namespace XakatonBack.Configuration
                 .HasForeignKey(u => u.RoleId)
                 .HasConstraintName("FK_Users_RoleId_Roles_Id");
 
+            builder.HasOne(u => u.Project)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.ProjectId)
+                .HasConstraintName("FK_Users_ProjectId_Projects_Id");
+
         }
     }
 }
