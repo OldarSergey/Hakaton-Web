@@ -48,6 +48,7 @@ namespace XakatonBack.Services
             return _context.Projects
                 .Where (p => p.IsDeleted != true)
                 .Include(p => p.Tasks)
+                .Include(p => p.Status)
                 .Include(p => p.Users)
                 .ToList();
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using XakatonBack.DTO;
 using XakatonBack.Model;
 using XakatonBack.Services;
 
@@ -18,25 +19,31 @@ namespace XakatonBack.Controllers
             _projectService = projectService;
         }
 
-        
-       
-
         [HttpGet]
-        public void Get()
+        public List<Project> Get()
+        {
+           return _projectService.GetAll();
+
+
+        }
+
+        [HttpPost]
+        public IActionResult Post(InputProject newProject)
         {
             Project project = new Project()
             {
-                Name = "Второй проект",
-                Description = "Описание второго прокта",
-                DeadLine = DateTime.Now,
-                CategoryId = 2,
-                PriorityId = 1,
-                StatusId = 1,
+                Name = newProject.Name,
+                Description = newProject.Description,
+                DeadLine = newProject.DeadLine,
+                CategoryId = newProject.CategoryId,
+                PriorityId = newProject.PriorityId,
+                StatusId = newProject.StatusId
             };
-            _projectService.AddProject(project);
 
-            
+            _projectService.AddProject(project);
+            return Ok();
         }
+
         [HttpDelete]
         public IActionResult Delete(int id) 
         {

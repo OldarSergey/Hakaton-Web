@@ -11,6 +11,8 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IStatusService, StatusService>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddScoped<IPriorityService, PriorityService>();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 

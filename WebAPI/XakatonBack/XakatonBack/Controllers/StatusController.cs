@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using XakatonBack.DTO;
 using XakatonBack.Model;
 using XakatonBack.Services;
 
@@ -17,19 +19,43 @@ namespace XakatonBack.Controllers
         }
 
         [HttpGet]
-        public List<Status> Get()
+        public List<InputStatusWithProjects>Get()
         {
             var statuses = _statusService.GetAllStatuses();
 
-           
+            var statusesWithProjects = statuses
+                .Select(status => new InputStatusWithProjects
+                {
+                    Id = status.Id,
+                    Name = status.Name,
+                    Description = status.Description,
+                    Projects = _statusService.GetProjectsForStatus(status.Id)
 
-            return statuses;
+                })
+                .ToList();
+
+            return statusesWithProjects;
         }
+
+        
+
+
+        [HttpPut("{projectId}/{newStatusId}")]
+        public IActionResult UpdateProjectStatus(int projectId, int newStatusId)
+        {
+          
+           if(_statusService.UpdateProjectStatus(projectId, newStatusId))
+                    return Ok();
+            else
+            {
+                return StatusCode(500);
+            }
+            
+            
+           
+        }
+
     }
 
-    public class StatusData
-    {
-        public Status Status { get; set; }
-        public List<Project> Projects { get; set; }
-    }
+    
 }

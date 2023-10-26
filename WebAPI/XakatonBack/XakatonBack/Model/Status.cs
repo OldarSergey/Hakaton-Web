@@ -10,7 +10,7 @@ namespace XakatonBack.Model
         public string Name { get; set; }
         public string Description { get; set; }
 
-
+        [JsonIgnore]
         public ICollection<Project> Projects { get; set; }
 
     }
