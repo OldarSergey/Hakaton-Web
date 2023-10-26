@@ -27,7 +27,7 @@ namespace XakatonBack.Controllers
             Project project = new Project()
             {
                 Name = "Второй проект",
-                Description = "Описание второго прокта.",
+                Description = "Описание второго прокта",
                 DeadLine = DateTime.Now,
                 CategoryId = 2,
                 PriorityId = 1,
